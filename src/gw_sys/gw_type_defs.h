@@ -11,6 +11,14 @@ typedef signed int n32;
 typedef un16 word;
 typedef word addr;
 
+#ifdef IS_BIG_ENDIAN
+static inline un16 le_to_native_16(un16 value) { return __builtin_bswap16(value); };
+static inline un32 le_to_native_32(un32 value) { return __builtin_bswap32(value); };
+#else
+static inline un16 le_to_native_16(un16 value) { return value; };
+static inline un32 le_to_native_32(un32 value) { return value; };
+#endif
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>

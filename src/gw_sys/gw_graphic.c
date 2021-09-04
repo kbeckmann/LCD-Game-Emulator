@@ -84,7 +84,7 @@ __attribute__((optimize("unroll-loops"))) static inline void update_segment_4bit
 {
 
 	/* segment first pixel corner (up/left) */
-	uint32 segment = gw_segments_offset[segment_nb];
+	uint32 segment = le_to_native_32(gw_segments_offset[segment_nb]);
 
 	uint8 cur_pixel;
 	int idx = 0;
@@ -101,10 +101,10 @@ __attribute__((optimize("unroll-loops"))) static inline void update_segment_4bit
 	pixel = &gw_segments[segment];
 
 	/* get segment coordinates */
-	uint16 segments_x = gw_segments_x[segment_nb];
-	uint16 segments_y = gw_segments_y[segment_nb];
-	uint16 segments_width = gw_segments_width[segment_nb];
-	uint16 segments_height = gw_segments_height[segment_nb];
+	uint16 segments_x = le_to_native_16(gw_segments_x[segment_nb]);
+	uint16 segments_y = le_to_native_16(gw_segments_y[segment_nb]);
+	uint16 segments_width = le_to_native_16(gw_segments_width[segment_nb]);
+	uint16 segments_height = le_to_native_16(gw_segments_height[segment_nb]);
 
 	for (int line = segments_y; line < segments_height + segments_y; line++)
 	{
@@ -132,7 +132,7 @@ __attribute__((optimize("unroll-loops"))) static inline void update_segment_8bit
 {
 
 	/* segment first pixel corner (up/left) */
-	uint32 segment = gw_segments_offset[segment_nb];
+	uint32 segment = le_to_native_32(gw_segments_offset[segment_nb]);
 
 	uint8 cur_pixel;
 	int idx = 0;
@@ -145,10 +145,10 @@ __attribute__((optimize("unroll-loops"))) static inline void update_segment_8bit
 	pixel = &gw_segments[segment];
 
 	/* get segment coordinates */
-	uint16 segments_x = gw_segments_x[segment_nb];
-	uint16 segments_y = gw_segments_y[segment_nb];
-	uint16 segments_width = gw_segments_width[segment_nb];
-	uint16 segments_height = gw_segments_height[segment_nb];
+	uint16 segments_x = le_to_native_16(gw_segments_x[segment_nb]);
+	uint16 segments_y = le_to_native_16(gw_segments_y[segment_nb]);
+	uint16 segments_width = le_to_native_16(gw_segments_width[segment_nb]);
+	uint16 segments_height = le_to_native_16(gw_segments_height[segment_nb]);
 
 	for (int line = segments_y; line < segments_height + segments_y; line++)
 	{
@@ -197,7 +197,7 @@ __attribute__((optimize("unroll-loops"))) inline void gw_gfx_sm510_rendering(uin
 
 	gw_graphic_framebuffer = framebuffer;
 
-	if (gw_head.flags & FLAG_RENDERING_LCD_INVERTED)
+	if (le_to_native_32(gw_head.flags) & FLAG_RENDERING_LCD_INVERTED)
 	{
 
 		memset(framebuffer, 0, GW_SCREEN_WIDTH * GW_SCREEN_HEIGHT * 2);
@@ -289,7 +289,7 @@ __attribute__((optimize("unroll-loops"))) inline void gw_gfx_sm500_rendering(uin
 
 	gw_graphic_framebuffer = framebuffer;
 
-	if (gw_head.flags & FLAG_RENDERING_LCD_INVERTED)
+	if (le_to_native_32(gw_head.flags) & FLAG_RENDERING_LCD_INVERTED)
 	{
 
 		memset(framebuffer, 0, GW_SCREEN_WIDTH * GW_SCREEN_HEIGHT * 2);
@@ -329,13 +329,13 @@ void gw_gfx_init()
 
 	/* init LCD deflicker level */
 	// for emulated cpus side
-	flag_lcd_deflicker_level = (gw_head.flags & FLAG_LCD_DEFLICKER_MASK) >> 6;
+	flag_lcd_deflicker_level = (le_to_native_32(gw_head.flags) & FLAG_LCD_DEFLICKER_MASK) >> 6;
 
 	// for segments rendering side
 	deflicker_enabled = (flag_lcd_deflicker_level != 0);
 
 	/* determine which API to use for segments rendering */
-	if (gw_head.flags & FLAG_SEGMENTS_4BITS)
+	if (le_to_native_32(gw_head.flags) & FLAG_SEGMENTS_4BITS)
 		update_segment = update_segment_4bits;
 	else
 		update_segment = update_segment_8bits;

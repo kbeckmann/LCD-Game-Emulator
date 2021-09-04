@@ -156,7 +156,7 @@ bool gw_romloader_rom2ram()
 
    /* check size */
    /*Check if the data size matches. based on the last object in the ROM header (keyboard) */
-   rom_size_dest = gw_head.keyboard + gw_head.keyboard_size;
+   rom_size_dest = le_to_native_32(gw_head.keyboard) + le_to_native_32(gw_head.keyboard_size);
 
    if (rom_size_src != rom_size_dest )   {
             printf("CPU_name=%s\n", gw_head.cpu_name);
@@ -170,8 +170,8 @@ bool gw_romloader_rom2ram()
    /* Manage the background */
 
    // check if there is a uncompressed background inside
-   if ( gw_head.background_pixel_size != 0)
-      gw_background    = (unsigned short*) &GW_ROM[gw_head.background_pixel];
+   if ( le_to_native_32(gw_head.background_pixel_size) != 0)
+      gw_background    = (unsigned short*) &GW_ROM[le_to_native_32(gw_head.background_pixel)];
    
    // otherwise we set the background at the end (assuming futur JPEG decoder)
    else
@@ -184,20 +184,20 @@ bool gw_romloader_rom2ram()
   // }
 
    /* Set up pointers to objects base */
-   gw_segments         = (unsigned char*)  &GW_ROM[gw_head.segments_pixel];
+   gw_segments         = (unsigned char*)  &GW_ROM[le_to_native_32(gw_head.segments_pixel)];
 
-   gw_segments_x       = (unsigned short*) &GW_ROM[gw_head.segments_x];
-   gw_segments_y       = (unsigned short*) &GW_ROM[gw_head.segments_y];
-   gw_segments_width   = (unsigned short*) &GW_ROM[gw_head.segments_width];
-   gw_segments_height  = (unsigned short*) &GW_ROM[gw_head.segments_height];
-   gw_segments_offset  = (unsigned int*)   &GW_ROM[gw_head.segments_offset];
+   gw_segments_x       = (unsigned short*) &GW_ROM[le_to_native_32(gw_head.segments_x)];
+   gw_segments_y       = (unsigned short*) &GW_ROM[le_to_native_32(gw_head.segments_y)];
+   gw_segments_width   = (unsigned short*) &GW_ROM[le_to_native_32(gw_head.segments_width)];
+   gw_segments_height  = (unsigned short*) &GW_ROM[le_to_native_32(gw_head.segments_height)];
+   gw_segments_offset  = (unsigned int*)   &GW_ROM[le_to_native_32(gw_head.segments_offset)];
 
-   gw_program          = (unsigned char*)  &GW_ROM[gw_head.program];
+   gw_program          = (unsigned char*)  &GW_ROM[le_to_native_32(gw_head.program)];
 
-   if ( gw_head.melody_size != 0)
-      gw_melody        = (unsigned char*)  &GW_ROM[gw_head.melody];
+   if ( le_to_native_32(gw_head.melody_size) != 0)
+      gw_melody        = (unsigned char*)  &GW_ROM[le_to_native_32(gw_head.melody)];
 
-   gw_keyboard         = (unsigned int*)   &GW_ROM[gw_head.keyboard];
+   gw_keyboard         = (unsigned int*)   &GW_ROM[le_to_native_32(gw_head.keyboard)];
 
    return true;
 }

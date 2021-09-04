@@ -69,10 +69,10 @@ bool gw_system_config()
 		un32 score = 0;
 
 		/* 4 combination to find */
-		un8 K1 = gw_keyboard[i] & 0xFF;
-		un8 K2 = (gw_keyboard[i] >> 8) & 0xFF;
-		un8 K3 = (gw_keyboard[i] >> 16) & 0xFF;
-		un8 K4 = (gw_keyboard[i] >> 24) & 0xFF;
+		un8 K1 = le_to_native_32(gw_keyboard[i]) & 0xFF;
+		un8 K2 = (le_to_native_32(gw_keyboard[i]) >> 8) & 0xFF;
+		un8 K3 = (le_to_native_32(gw_keyboard[i]) >> 16) & 0xFF;
+		un8 K4 = (le_to_native_32(gw_keyboard[i]) >> 24) & 0xFF;
 
 		un8 C1 = GW_BUTTON_LEFT + GW_BUTTON_UP;
 		un8 C2 = GW_BUTTON_LEFT + GW_BUTTON_DOWN;
@@ -230,7 +230,7 @@ static void gw_system_sound_melody(unsigned char data)
 	else
 	{
 
-		switch (gw_head.flags & FLAG_SOUND_MASK)
+		switch (le_to_native_32(gw_head.flags) & FLAG_SOUND_MASK)
 		{
 			// R1 to piezo
 		case FLAG_SOUND_R1_PIEZO:
@@ -292,7 +292,7 @@ unsigned char gw_readB()
 	if (keys_pressed == 0)
 		return 1;
 
-	if (gw_keyboard[9] & keys_pressed)
+	if (le_to_native_32(gw_keyboard[9]) & keys_pressed)
 		return 0;
 
 	return 1;
@@ -307,7 +307,7 @@ unsigned char gw_readBA()
 	if (keys_pressed == 0)
 		return 1;
 
-	if (gw_keyboard[8] & keys_pressed)
+	if (le_to_native_32(gw_keyboard[8]) & keys_pressed)
 		return 0;
 
 	return 1;
@@ -348,26 +348,26 @@ unsigned char gw_readK(unsigned char io_S)
 				if (keys_pressed == GW_BUTTON_UP)
 					keys_pressed = (last_joystick & (0xFF - GW_BUTTON_DOWN)) | GW_BUTTON_UP;
 
-				if ((gw_keyboard[Sx] & GW_MASK_K1) == keys_pressed)
+				if ((le_to_native_32(gw_keyboard[Sx]) & GW_MASK_K1) == keys_pressed)
 				{
 					io_K |= 0x1;
 					last_joystick = keys_pressed;
 				}
 
 				// perform  key checking (exclusively, all keys shall match)
-				if ((gw_keyboard[Sx] & GW_MASK_K2) == (keys_pressed << 8))
+				if ((le_to_native_32(gw_keyboard[Sx]) & GW_MASK_K2) == (keys_pressed << 8))
 				{
 					io_K |= 0x2;
 					last_joystick = keys_pressed;
 				}
 
-				if ((gw_keyboard[Sx] & GW_MASK_K3) == (keys_pressed << 16))
+				if ((le_to_native_32(gw_keyboard[Sx]) & GW_MASK_K3) == (keys_pressed << 16))
 				{
 					io_K |= 0x4;
 					last_joystick = keys_pressed;
 				}
 
-				if ((gw_keyboard[Sx] & GW_MASK_K4) == (keys_pressed << 24))
+				if ((le_to_native_32(gw_keyboard[Sx]) & GW_MASK_K4) == (keys_pressed << 24))
 				{
 					io_K |= 0x8;
 					last_joystick = keys_pressed;
@@ -378,13 +378,13 @@ unsigned char gw_readK(unsigned char io_S)
 			else
 			{
 
-				if (((gw_keyboard[Sx] & GW_MASK_K1) & (keys_pressed)) != 0)
+				if (((le_to_native_32(gw_keyboard[Sx]) & GW_MASK_K1) & (keys_pressed)) != 0)
 					io_K |= 0x1;
-				if (((gw_keyboard[Sx] & GW_MASK_K2) & (keys_pressed << 8)) != 0)
+				if (((le_to_native_32(gw_keyboard[Sx]) & GW_MASK_K2) & (keys_pressed << 8)) != 0)
 					io_K |= 0x2;
-				if (((gw_keyboard[Sx] & GW_MASK_K3) & (keys_pressed << 16)) != 0)
+				if (((le_to_native_32(gw_keyboard[Sx]) & GW_MASK_K3) & (keys_pressed << 16)) != 0)
 					io_K |= 0x4;
-				if (((gw_keyboard[Sx] & GW_MASK_K4) & (keys_pressed << 24)) != 0)
+				if (((le_to_native_32(gw_keyboard[Sx]) & GW_MASK_K4) & (keys_pressed << 24)) != 0)
 					io_K |= 0x8;
 			}
 		}
@@ -410,22 +410,22 @@ unsigned char gw_readK(unsigned char io_S)
 				if (keys_pressed == GW_BUTTON_UP)
 					keys_pressed = (last_joystick & (0xFF - GW_BUTTON_DOWN)) | GW_BUTTON_UP;
 
-				if ((gw_keyboard[1] & GW_MASK_K1) == keys_pressed)
+				if ((le_to_native_32(gw_keyboard[1]) & GW_MASK_K1) == keys_pressed)
 				{
 					io_K |= 0x1;
 					last_joystick = keys_pressed;
 				}
-				if ((gw_keyboard[1] & GW_MASK_K2) == (keys_pressed << 8))
+				if ((le_to_native_32(gw_keyboard[1]) & GW_MASK_K2) == (keys_pressed << 8))
 				{
 					io_K |= 0x2;
 					last_joystick = keys_pressed;
 				}
-				if ((gw_keyboard[1] & GW_MASK_K3) == (keys_pressed << 16))
+				if ((le_to_native_32(gw_keyboard[1]) & GW_MASK_K3) == (keys_pressed << 16))
 				{
 					io_K |= 0x4;
 					last_joystick = keys_pressed;
 				}
-				if ((gw_keyboard[1] & GW_MASK_K4) == (keys_pressed << 24))
+				if ((le_to_native_32(gw_keyboard[1]) & GW_MASK_K4) == (keys_pressed << 24))
 				{
 					io_K |= 0x8;
 					last_joystick = keys_pressed;
@@ -433,13 +433,13 @@ unsigned char gw_readK(unsigned char io_S)
 			}
 			else
 			{
-				if (((gw_keyboard[1] & GW_MASK_K1) & (keys_pressed)) != 0)
+				if (((le_to_native_32(gw_keyboard[1]) & GW_MASK_K1) & (keys_pressed)) != 0)
 					io_K |= 0x1;
-				if (((gw_keyboard[1] & GW_MASK_K2) & (keys_pressed << 8)) != 0)
+				if (((le_to_native_32(gw_keyboard[1]) & GW_MASK_K2) & (keys_pressed << 8)) != 0)
 					io_K |= 0x2;
-				if (((gw_keyboard[1] & GW_MASK_K3) & (keys_pressed << 16)) != 0)
+				if (((le_to_native_32(gw_keyboard[1]) & GW_MASK_K3) & (keys_pressed << 16)) != 0)
 					io_K |= 0x4;
-				if (((gw_keyboard[1] & GW_MASK_K4) & (keys_pressed << 24)) != 0)
+				if (((le_to_native_32(gw_keyboard[1]) & GW_MASK_K4) & (keys_pressed << 24)) != 0)
 					io_K |= 0x8;
 			}
 		}
